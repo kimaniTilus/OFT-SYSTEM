@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const userRoutes = require('./routes/userRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
 
@@ -23,6 +24,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/office-tr
 
 // Routes
 app.use('/api/users', userRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // Welcome route
 app.get('/', (req, res) => {
