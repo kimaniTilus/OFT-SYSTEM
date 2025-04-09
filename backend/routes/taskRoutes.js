@@ -5,8 +5,9 @@ const {
   createTask,
   updateTask,
   deleteTask,
+  approveStatus,
 } = require('../controllers/taskController');
-const { protect } = require('../middleware/auth');
+const { protect, admin } = require('../middleware/auth');
 
 router.use(protect); // All task routes require authentication
 
@@ -17,5 +18,8 @@ router.route('/')
 router.route('/:id')
   .put(updateTask)
   .delete(deleteTask);
+
+router.route('/:id/approve-status')
+  .put(admin, approveStatus);
 
 module.exports = router; 

@@ -10,6 +10,9 @@ export const AuthProvider = ({ children }) => {
     // Check if user is logged in
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
+    console.log('Stored token:', token); // Debug log
+    console.log('Stored user data:', userData); // Debug log
+    
     if (token && userData) {
       setUser(JSON.parse(userData));
     }
@@ -17,6 +20,8 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (userData, token) => {
+    console.log('Logging in with token:', token); // Debug log
+    console.log('Logging in user data:', userData); // Debug log
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);

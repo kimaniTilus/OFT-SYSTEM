@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, Link as RouterLink } from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -12,6 +12,8 @@ import {
   ListItemText,
   Toolbar,
   Typography,
+  Button,
+  Container,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -60,6 +62,12 @@ function Layout() {
             <ListItemText primary={item.text} />
           </ListItem>
         ))}
+        {user?.role === 'admin' && (
+          <ListItem button onClick={() => navigate('/employees')}>
+            <ListItemIcon><PeopleIcon /></ListItemIcon>
+            <ListItemText primary="Employees" />
+          </ListItem>
+        )}
         <ListItem button onClick={handleLogout}>
           <ListItemIcon><LogoutIcon /></ListItemIcon>
           <ListItemText primary="Logout" />
@@ -69,70 +77,35 @@ function Layout() {
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
+      <AppBar position="static">
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Office Work Tracking System
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Office Tracker
           </Typography>
-          <Typography variant="body1" sx={{ mr: 2 }}>
-            Welcome, {user?.firstName} {user?.lastName}
-          </Typography>
+          <Button color="inherit" component={RouterLink} to="/dashboard">
+            Dashboard
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/tasks">
+            Tasks
+          </Button>
+          {user?.role === 'admin' && (
+            <Button color="inherit" component={RouterLink} to="/employees">
+              Employees
+            </Button>
+          )}
+          <Button color="inherit" component={RouterLink} to="/reports">
+            Reports
+          </Button>
+          <Button color="inherit" onClick={handleLogout}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
+      <Container component="main" sx={{ flexGrow: 1, py: 3 }}>
         <Outlet />
-      </Box>
+      </Container>
     </Box>
   );
 }

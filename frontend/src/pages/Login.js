@@ -5,9 +5,8 @@ import {
   Button,
   TextField,
   Link,
-  Paper,
-  Box,
   Grid,
+  Box,
   Typography,
   Container,
   Alert,
@@ -36,6 +35,7 @@ function Login() {
     setError('');
 
     try {
+      console.log('Attempting login...'); // Debug log
       const response = await fetch('http://localhost:5000/api/users/login', {
         method: 'POST',
         headers: {
@@ -45,6 +45,7 @@ function Login() {
       });
 
       const data = await response.json();
+      console.log('Login response:', data); // Debug log
 
       if (!response.ok) {
         throw new Error(data.message || 'Login failed');
@@ -52,10 +53,11 @@ function Login() {
 
       // Login successful
       login(data, data.token);
+      console.log('Login successful, token stored:', data.token); // Debug log
       navigate('/dashboard');
     } catch (error) {
+      console.error('Login error:', error); // Debug log
       setError(error.message);
-      console.error('Login failed:', error);
     }
   };
 
@@ -113,7 +115,7 @@ function Login() {
           >
             Sign In
           </Button>
-          <Grid container justifyContent="center">
+          <Grid container>
             <Grid item>
               <Link component={RouterLink} to="/register" variant="body2">
                 {"Don't have an account? Sign Up"}

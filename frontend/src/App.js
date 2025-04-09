@@ -1,17 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Dashboard from './pages/Dashboard';
+import CssBaseline from '@mui/material/CssBaseline';
+import { AuthProvider } from './context/AuthContext';
+import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
 import Tasks from './pages/Tasks';
-import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
-import { AuthProvider } from './context/AuthContext';
+import Employees from './pages/Employees';
+import Reports from './pages/Reports';
+import PrivateRoute from './components/PrivateRoute';
+import ProfilePage from './pages/ProfilePage';
 
 const theme = createTheme({
   palette: {
+    mode: 'light',
     primary: {
       main: '#1976d2',
     },
@@ -23,30 +27,27 @@ const theme = createTheme({
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AuthProvider>
         <Router>
           <Routes>
-            {/* Public routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            
-            {/* Protected routes */}
-            <Route element={<ProtectedRoute />}>
-              <Route element={<Layout />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/tasks" element={<Tasks />} />
-                {/* Add more protected routes here */}
-              </Route>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+              <Route path="dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+              <Route path="tasks" element={<PrivateRoute><Tasks /></PrivateRoute>} />
+              <Route path="employees" element={<PrivateRoute><Employees /></PrivateRoute>} />
+              <Route path="reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
+              <Route path="profile/:id" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
+              <Route path="profilepage" element={<Navigate to={`/profile/${localStorage.getItem('userId')}`} replace />} />
+              <Route path="*" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             </Route>
-
-            {/* Redirect root to dashboard or login */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </Router>
-      </ThemeProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

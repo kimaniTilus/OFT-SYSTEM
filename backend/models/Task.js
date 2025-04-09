@@ -24,6 +24,26 @@ const taskSchema = new mongoose.Schema({
     enum: ['pending', 'in_progress', 'completed', 'on_hold'],
     default: 'pending',
   },
+  pendingStatus: {
+    requestedStatus: {
+      type: String,
+      enum: ['pending', 'in_progress', 'completed', 'on_hold'],
+    },
+    requestedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    requestedAt: {
+      type: Date,
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    approvedAt: {
+      type: Date,
+    },
+  },
   priority: {
     type: String,
     enum: ['low', 'medium', 'high'],
